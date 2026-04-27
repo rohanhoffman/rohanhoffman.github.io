@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rohan Hoffman | Mechanical Engineering</title>
+<style>
+  /* ============================================================
+     GLOBAL STYLES
+     These apply to the whole page. You can change fonts, colors,
+     and spacing here.
+  ============================================================ */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    line-height: 1.6;
+    background: #f8f9fa;
+  }
+
+  /* ============================================================
+     NAVIGATION BAR (the fixed bar at the top)
+  ============================================================ */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: #0d2137;        /* Dark navy — change this to change the nav color */
+    padding: 14px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+  }
+  nav .logo {
+    color: #4fc3f7;             /* Light blue — change to change your name color in nav */
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  nav ul { list-style: none; display: flex; gap: 24px; }
+  nav ul li a { color: #ccc; text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+  nav ul li a:hover { color: #4fc3f7; }
+
+  /* ============================================================
+     HERO SECTION (the big banner at the top of the page)
+  ============================================================ */
+  #hero {
+    background: linear-gradient(135deg, #0d2137 0%, #1a3a5c 55%, #0077b6 100%);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 100px 20px 60px;
+  }
+  .hero-content h1 { font-size: 3.2rem; font-weight: 800; letter-spacing: 2px; margin-bottom: 10px; }
+  .hero-content h2 { font-size: 1.4rem; font-weight: 300; color: #4fc3f7; margin-bottom: 18px; }
+  .hero-content p  { font-size: 1.05rem; color: #b0c4de; max-width: 580px; margin: 0 auto 28px; }
+  .hero-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn { padding: 11px 26px; border-radius: 30px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; display: inline-block; }
+  .btn-primary { background: #4fc3f7; color: #0d2137; }
+  .btn-primary:hover { background: #81d4fa; transform: translateY(-2px); }
+  .btn-outline { border: 2px solid #4fc3f7; color: #4fc3f7; }
+  .btn-outline:hover { background: #4fc3f7; color: #0d2137; transform: translateY(-2px); }
+
+  /* ============================================================
+     SHARED SECTION STYLES
+  ============================================================ */
+  section { padding: 75px 40px; }
+  .section-title { font-size: 1.9rem; font-weight: 700; color: #0d2137; text-align: center; margin-bottom: 8px; }
+  .section-subtitle { text-align: center; color: #777; margin-bottom: 45px; }
+  .section-divider { width: 55px; height: 4px; background: #0077b6; margin: 8px auto 38px; border-radius: 2px; }
+
+  /* ============================================================
+     ABOUT SECTION
+  ============================================================ */
+  #about { background: white; }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 50px;
+    max-width: 860px;
+    margin: 0 auto;
+    align-items: center;
+  }
+  .photo-placeholder {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0d2137, #0077b6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    border: 4px solid #4fc3f7;
+    color: #4fc3f7;
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 16px;
+  }
+  /* This is what your photo will look like once you add it */
+  .profile-photo {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #4fc3f7;
+    display: block;
+    margin: 0 auto;
+  }
+  .about-text p { margin-bottom: 13px; color: #555; font-size: 1rem; }
+
+  /* ============================================================
+     SKILLS SECTION
+  ============================================================ */
+  #skills { background: #f0f4f8; }
+  .skills-grid { display: flex; flex-wrap: wrap; gap: 11px; justify-content: center; max-width: 780px; margin: 0 auto; }
+  .skill-tag {
+    background: white;
+    border: 2px solid #0077b6;
+    color: #0d2137;
+    padding: 7px 18px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+  }
+  .skill-tag:hover { background: #0077b6; color: white; transform: translateY(-2px); }
+
+  /* ============================================================
+     EXPERIENCE SECTION (the timeline)
+  ============================================================ */
+  #experience { background: white; }
+  .timeline { max-width: 780px; margin: 0 auto; position: relative; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #0077b6, #4fc3f7);
+  }
+  .timeline-item { padding: 0 0 36px 56px; position: relative; }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 6px;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: #0077b6;
+    border: 3px solid #4fc3f7;
+  }
+  .timeline-date  { font-size: 0.82rem; color: #0077b6; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .timeline-role  { font-size: 1.15rem; font-weight: 700; color: #0d2137; margin-bottom: 2px; }
+  .timeline-org   { font-size: 0.95rem; color: #666; font-style: italic; margin-bottom: 9px; }
+  .timeline-details { list-style: disc; padding-left: 18px; color: #777; }
+  .timeline-details li { margin-bottom: 4px; font-size: 0.95rem; }
+
+  /* ============================================================
+     PROJECTS SECTION (the cards with photos)
+  ============================================================ */
+  #projects { background: #f0f4f8; }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 26px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  .project-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .project-card:hover { transform: translateY(-5px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+  /* Placeholder shown before you add a real image */
+  .project-image-placeholder {
+    width: 100%;
+    height: 190px;
+    background: linear-gradient(135deg, #0d2137, #0077b6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4fc3f7;
+    font-size: 2.2rem;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .project-image-placeholder span { font-size: 0.85rem; color: #b0c4de; text-align: center; padding: 0 16px; }
+  /* Your actual project image — replace the placeholder div with an <img> using this class */
+  .project-image { width: 100%; height: 190px; object-fit: cover; display: block; }
+  .project-body { padding: 18px; }
+  .project-tag {
+    display: inline-block;
+    background: #e3f2fd;
+    color: #0077b6;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 7px;
+  }
+  .project-title { font-size: 1.08rem; font-weight: 700; color: #0d2137; margin-bottom: 7px; }
+  .project-desc  { color: #666; font-size: 0.92rem; line-height: 1.6; }
+
+  /* ============================================================
+     EDUCATION SECTION
+  ============================================================ */
+  #education { background: white; }
+  .education-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 22px;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  .education-card { background: #f0f4f8; border-left: 5px solid #0077b6; padding: 18px 22px; border-radius: 8px; }
+  .edu-school  { font-size: 1.05rem; font-weight: 700; color: #0d2137; margin-bottom: 5px; }
+  .edu-degree  { color: #0077b6; font-weight: 600; margin-bottom: 5px; font-size: 0.95rem; }
+  .edu-details { color: #777; font-size: 0.88rem; }
+  .courses-list { display: flex; flex-wrap: wrap; gap: 9px; justify-content: center; max-width: 780px; margin: 0 auto; }
+  .course-item { background: white; border: 1px solid #ccc; color: #555; padding: 6px 16px; border-radius: 20px; font-size: 0.88rem; }
+  .course-item.inprogress { border-color: #0077b6; color: #0077b6; font-style: italic; }
+
+  /* ============================================================
+     CONTACT SECTION
+  ============================================================ */
+  #contact { background: #0d2137; color: white; text-align: center; }
+  #contact .section-title { color: white; }
+  #contact .section-subtitle { color: #b0c4de; }
+  .contact-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+  .contact-link {
+    border: 2px solid #4fc3f7;
+    color: #4fc3f7;
+    padding: 11px 26px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+  }
+  .contact-link:hover { background: #4fc3f7; color: #0d2137; transform: translateY(-2px); }
+
+  /* ============================================================
+     FOOTER
+  ============================================================ */
+  footer { background: #06121f; color: #555; text-align: center; padding: 18px; font-size: 0.82rem; }
+
+  /* ============================================================
+     RESPONSIVE — makes the site look good on phones
+  ============================================================ */
+  @media (max-width: 700px) {
+    .about-grid { grid-template-columns: 1fr; text-align: center; }
+    .hero-content h1 { font-size: 2.2rem; }
+    nav ul { gap: 12px; }
+    section { padding: 55px 20px; }
+  }
+  @media (max-width: 480px) {
+    nav ul { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION BAR
+     Each <a href="#sectionname"> scrolls to that section.
+     To add a new nav link: copy a <li> line and update the href and text.
+============================================================ -->
+<nav>
+  <div class="logo">Rohan Hoffman</div>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ============================================================
+     HERO SECTION
+     Change the <h1>, <h2>, and <p> text to update the banner.
+     The resume.pdf link will work once you upload your resume file.
+============================================================ -->
+<section id="hero">
+  <div class="hero-content">
+    <h1>Rohan Hoffman</h1>
+    <h2>Mechanical Engineering Student @ UC Irvine</h2>
+    <p>
+      Undergraduate researcher, design lead, and aspiring engineer passionate about
+      sustainable energy, advanced manufacturing, and solving real-world problems.
+    </p>
+    <div class="hero-buttons">
+      <a href="resume.pdf" class="btn btn-primary" target="_blank">📄 View Resume</a>
+      <a href="https://linkedin.com/in/rohanhoffman" class="btn btn-outline" target="_blank">🔗 LinkedIn</a>
+      <a href="#projects" class="btn btn-outline">🔧 My Projects</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ABOUT SECTION
+     TO ADD YOUR PHOTO:
+       1. Upload a photo file (e.g. profile.jpg) to your GitHub repo
+       2. Delete the <div class="photo-placeholder"> block
+       3. Replace it with: <img src="profile.jpg" alt="Rohan Hoffman" class="profile-photo">
+     TO EDIT THE TEXT: Just change the words inside the <p> tags.
+============================================================ -->
+<section id="about">
+  <h2 class="section-title">About Me</h2>
+  <div class="section-divider"></div>
+  <div class="about-grid">
+    <div class="about-photo">
+      <!-- DELETE THIS BLOCK AND REPLACE WITH YOUR <img> TAG ONCE YOU HAVE A PHOTO -->
+      <div class="photo-placeholder">📷<br><br>Add your<br>photo here!<br><br><small>(see instructions)</small></div>
+    </div>
+    <div class="about-text">
+      <p>
+        Hi! I'm Rohan, a Mechanical Engineering student at UC Irvine (expected graduation: December 2027)
+        with a GPA of 3.5. I'm passionate about sustainable energy systems, electrochemical engineering,
+        and bringing creative engineering solutions to life.
+      </p>
+      <p>
+        I currently conduct undergraduate research at the Zenyuk Group, focusing on AEM fuel cell technology,
+        and serve as a Project Coordinator for Engineers for a Sustainable World at UCI.
+      </p>
+      <p>
+        Previously, I was a Research Engineer Intern at USC Viterbi and Design Lead for UCI's combat
+        robotics team. I'm always looking for new challenges and opportunities to grow as an engineer.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SKILLS SECTION
+     TO ADD A SKILL: Copy one <div class="skill-tag"> line and change the text.
+     TO REMOVE A SKILL: Delete that <div class="skill-tag"> line.
+============================================================ -->
+<section id="skills">
+  <h2 class="section-title">Skills</h2>
+  <div class="section-divider"></div>
+  <p class="section-subtitle">Tools and technologies I work with</p>
+  <div class="skills-grid">
+    <div class="skill-tag">SOLIDWORKS</div>
+    <div class="skill-tag">MATLAB</div>
+    <div class="skill-tag">Python</div>
+    <div class="skill-tag">3D Printing</div>
+    <div class="skill-tag">CNC Machining</div>
+    <div class="skill-tag">Design Optimization</div>
+    <div class="skill-tag">Technical Communication</div>
+    <div class="skill-tag">Industrial Research</div>
+    <div class="skill-tag">Data Acquisition</div>
+    <div class="skill-tag">CAD</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     EXPERIENCE SECTION
+     TO ADD A NEW EXPERIENCE: Copy one full <div class="timeline-item"> block
+     and paste it above or below the others, then update all the text.
+     TO REMOVE ONE: Delete the entire <div class="timeline-item"> block.
+============================================================ -->
+<section id="experience">
+  <h2 class="section-title">Experience</h2>
+  <div class="section-divider"></div>
+  <div class="timeline">
+
+    <!-- EXPERIENCE 1 -->
+    <div class="timeline-item">
+      <div class="timeline-date">March 2026 – Present</div>
+      <div class="timeline-role">Undergraduate Lab Researcher</div>
+      <div class="timeline-org">Zenyuk Group — Electrochemical Engineering Research Lab, UC Irvine</div>
+      <ul class="timeline-details">
+        <li>Research in contact resistance and hot-pressing membranes related to AEM fuel cell technology</li>
+      </ul>
+    </div>
+
+    <!-- EXPERIENCE 2 -->
+    <div class="timeline-item">
+      <div class="timeline-date">March 2026 – Present</div>
+      <div class="timeline-role">Project Coordinator</div>
+      <div class="timeline-org">Engineers for a Sustainable World at UCI</div>
+      <ul class="timeline-details">
+        <li>Ensure project progression and bridge communication between project leads and executive board</li>
+        <li>Create general projects for growth as engineers and engagement in sustainable community</li>
+      </ul>
+    </div>
+
+    <!-- EXPERIENCE 3 -->
+    <div class="timeline-item">
+      <div class="timeline-date">September 2025 – February 2026</div>
+      <div class="timeline-role">Lightweight Team Design Lead</div>
+      <div class="timeline-org">Anteater Combat Engineering, UC Irvine</div>
+      <ul class="timeline-details">
+        <li>Worked with a team to design and build a combat robot for an intercollegiate competition</li>
+        <li>Led efforts to design and optimize the bot through iterations of CAD and 3D printing</li>
+      </ul>
+    </div>
+
+    <!-- EXPERIENCE 4 -->
+    <div class="timeline-item">
+      <div class="timeline-date">June 2025 – August 2025</div>
+      <div class="timeline-role">Research Engineer Intern</div>
+      <div class="timeline-org">USC Viterbi School of Engineering</div>
+      <ul class="timeline-details">
+        <li>Research in transient plasma ignition and diesel emission particles under Dr. Stephen B. Cronin</li>
+        <li>Designed a presentation with team to report findings to sponsor company Rypos</li>
+      </ul>
+    </div>
+
+    <!-- EXPERIENCE 5 -->
+    <div class="timeline-item">
+      <div class="timeline-date">July 2023 – November 2024</div>
+      <div class="timeline-role">Senior Sales Associate (Part-time)</div>
+      <div class="timeline-org">Music & Arts</div>
+      <ul class="timeline-details">
+        <li>Connected with customers using professional musical expertise to recommend fitting products and services</li>
+        <li>Increased store sales by 20%</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     PROJECTS SECTION
+     TO ADD A PROJECT IMAGE:
+       1. Upload your image (e.g. robot.jpg) to your GitHub repo
+       2. Delete the <div class="project-image-placeholder"> block
+       3. Replace it with: <img src="robot.jpg" alt="Combat Robot" class="project-image">
+     TO ADD A NEW PROJECT: Copy one full <div class="project-card"> block and paste it,
+     then update the image, tag, title, and description.
+============================================================ -->
+<section id="projects">
+  <h2 class="section-title">Projects</h2>
+  <div class="section-divider"></div>
+  <p class="section-subtitle">A showcase of my engineering work — more coming soon!</p>
+  <div class="projects-grid">
+
+    <!-- PROJECT CARD 1 -->
+    <div class="project-card">
+      <!-- REPLACE THIS DIV WITH AN <img> TAG ONCE YOU HAVE A PHOTO -->
+      <div class="project-image-placeholder">🤖<span>Add a photo of your combat robot here!</span></div>
+      <div class="project-body">
+        <span class="project-tag">Robotics · CAD · 3D Printing</span>
+        <div class="project-title">Combat Robot — Anteater Combat Engineering</div>
+        <p class="project-desc">
+          Served as Lightweight Team Design Lead for UCI's combat robotics club. Designed and
+          iterated on the robot chassis using SOLIDWORKS and 3D printing to optimize performance
+          for intercollegiate competition.
+        </p>
+      </div>
+    </div>
+
+    <!-- PROJECT CARD 2 -->
+    <div class="project-card">
+      <div class="project-image-placeholder">⚗️<span>Add a photo of your fuel cell research here!</span></div>
+      <div class="project-body">
+        <span class="project-tag">Research · Electrochemistry · AEM</span>
+        <div class="project-title">AEM Fuel Cell Research — Zenyuk Group</div>
+        <p class="project-desc">
+          Undergraduate researcher investigating contact resistance and hot-pressing of membranes
+          for Anion Exchange Membrane (AEM) fuel cell technology at the Zenyuk Group, UC Irvine.
+        </p>
+      </div>
+    </div>
+
+    <!-- PROJECT CARD 3 -->
+    <div class="project-card">
+      <div class="project-image-placeholder">🔥<span>Add a photo from your USC internship here!</span></div>
+      <div class="project-body">
+        <span class="project-tag">Research · Plasma · Emissions</span>
+        <div class="project-title">Transient Plasma Ignition Research — USC Viterbi</div>
+        <p class="project-desc">
+          Researched transient plasma ignition and diesel emission particles under Dr. Stephen B. Cronin
+          at USC Viterbi. Presented findings to sponsor company Rypos.
+        </p>
+      </div>
+    </div>
+
+    <!-- TO ADD ANOTHER PROJECT: COPY THE ENTIRE PROJECT CARD BLOCK ABOVE AND PASTE IT HERE -->
+
+  </div>
+</section>
+
+<!-- ============================================================
+     EDUCATION SECTION
+     TO ADD/EDIT A SCHOOL: Update the text inside the .education-card divs.
+     TO ADD A COURSE: Copy a <span class="course-item"> and change the text.
+     For in-progress courses use: <span class="course-item inprogress">
+============================================================ -->
+<section id="education">
+  <h2 class="section-title">Education</h2>
+  <div class="section-divider"></div>
+  <div class="education-grid">
+    <div class="education-card">
+      <div class="edu-school">University of California, Irvine</div>
+      <div class="edu-degree">B.S. Mechanical Engineering</div>
+      <div class="edu-details">GPA: 3.5 · Expected December 2027</div>
+    </div>
+    <div class="education-card">
+      <div class="edu-school">Citrus College, Glendora, CA</div>
+      <div class="edu-degree">A.S. Pre-Engineering · A.S. Physics · A.S. Mathematics</div>
+      <div class="edu-details">GPA: 3.8 · June 2023 – June 2025</div>
+    </div>
+  </div>
+  <h3 style="text-align:center; margin-top:46px; margin-bottom:18px; color:#0d2137; font-size:1.1rem;">Relevant Coursework</h3>
+  <div class="courses-list">
+    <span class="course-item">Solar & Renewable Energy Systems</span>
+    <span class="course-item">Electrochemical Engineering</span>
+    <span class="course-item">Dynamics</span>
+    <span class="course-item">Vibrations</span>
+    <span class="course-item">Intro to Thermodynamics</span>
+    <span class="course-item">Electric Circuits</span>
+    <span class="course-item inprogress">Fluid Dynamics (in progress)</span>
+    <span class="course-item inprogress">Mechanical Systems (in progress)</span>
+    <span class="course-item inprogress">Mechanics of Structures (in progress)</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     CONTACT SECTION
+     Update the email and LinkedIn URL here.
+     The resume.pdf link works once your PDF is uploaded to your repo.
+============================================================ -->
+<section id="contact">
+  <h2 class="section-title">Get In Touch</h2>
+  <div class="section-divider" style="background: #4fc3f7;"></div>
+  <p class="section-subtitle">Interested in collaborating, recruiting, or just want to connect? Reach out!</p>
+  <div class="contact-links">
+    <a href="mailto:rphoffma@uci.edu" class="contact-link">✉️ rphoffma@uci.edu</a>
+    <a href="https://linkedin.com/in/rohanhoffman" class="contact-link" target="_blank">🔗 LinkedIn</a>
+    <a href="resume.pdf" class="contact-link" target="_blank">📄 Download Resume</a>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     Update the year and name if needed.
+============================================================ -->
+<footer>
+  <p>© 2026 Rohan Hoffman · Built with HTML & CSS · Hosted on GitHub Pages</p>
+</footer>
+
+</body>
+</html>
