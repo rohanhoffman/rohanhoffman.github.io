@@ -250,7 +250,18 @@
   .edu-details { color: #777; font-size: 0.88rem; }
   .courses-list { display: flex; flex-wrap: wrap; gap: 9px; justify-content: center; max-width: 780px; margin: 0 auto; }
   .course-item { background: white; border: 1px solid #ccc; color: #555; padding: 6px 16px; border-radius: 20px; font-size: 0.88rem; }
-  .course-item.inprogress { border-color: #0077b6; color: #0077b6; font-style: italic; }
+  /* Makes course pills clickable without looking like ugly default links */
+a.course-item {
+  text-decoration: none;         /* removes underline */
+  cursor: pointer;
+  transition: all 0.25s;
+}
+a.course-item:hover {
+  background: #0077b6;
+  color: white;
+  border-color: #0077b6;
+  transform: translateY(-2px);   /* subtle lift on hover */
+}
 
   /* ============================================================
      CONTACT SECTION
@@ -620,7 +631,6 @@
      EDUCATION SECTION
      TO ADD/EDIT A SCHOOL: Update the text inside the .education-card divs.
      TO ADD A COURSE: Copy a <span class="course-item"> and change the text.
-     For in-progress courses use: <span class="course-item inprogress">
 ============================================================ -->
 <section id="education">
   <h2 class="section-title">Education</h2>
@@ -639,16 +649,62 @@
   </div>
   <h3 style="text-align:center; margin-top:46px; margin-bottom:18px; color:#0d2137; font-size:1.1rem;">Relevant Coursework</h3>
   <div class="courses-list">
-    <span class="course-item">Solar & Renewable Energy Systems</span>
-    <span class="course-item">Electrochemical Engineering</span>
-    <span class="course-item">Dynamics</span>
-    <span class="course-item">Vibrations</span>
-    <span class="course-item">Intro to Thermodynamics</span>
-    <span class="course-item">Electric Circuits</span>
-    <span class="course-item inprogress">Fluid Dynamics (in progress)</span>
-    <span class="course-item inprogress">Mechanical Systems (in progress)</span>
-    <span class="course-item inprogress">Mechanics of Structures (in progress)</span>
-  </div>
+
+  <a class="course-item"
+     href="https://catalogue.uci.edu/allcourses/engrmae/"
+     target="_blank">
+    Solar &amp; Renewable Energy Systems
+  </a>
+
+  <a class="course-item"
+     href="https://catalogue.uci.edu/allcourses/cbe/"
+     target="_blank">
+    Electrochemical Engineering
+  </a>
+
+  <a class="course-item"
+     href="https://catalogue.uci.edu/allcourses/engrmae/"
+     target="_blank">
+    Dynamics
+  </a>
+
+  <a class="course-item"
+     href="https://catalogue.uci.edu/allcourses/engrmae/"
+     target="_blank">
+    Vibrations
+  </a>
+
+  <a class="course-item"
+     href="https://catalogue.uci.edu/allcourses/engrmae/"
+     target="_blank">
+    Intro to Thermodynamics
+  </a>
+
+  <a class="course-item"
+     href="https://catalogue.uci.edu/allcourses/engrmae/"
+     target="_blank">
+    Electric Circuits
+  </a>
+
+  <a class="course-item"
+     href="https://catalogue.uci.edu/allcourses/engrmae/"
+     target="_blank">
+    Fluid Dynamics (in progress)
+  </a>
+
+  <a class="course-item"
+     href="https://catalogue.uci.edu/allcourses/engrmae/"
+     target="_blank">
+    Mechanical Systems (in progress)
+  </a>
+
+  <a class="course-item"
+     href="https://catalogue.uci.edu/allcourses/engrmae/"
+     target="_blank">
+    Mechanics of Structures (in progress)
+  </a>
+
+</div>
 </section>
 
 <!-- ============================================================
