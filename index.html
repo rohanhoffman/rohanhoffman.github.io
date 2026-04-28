@@ -169,7 +169,7 @@
    These styles control the arrows, dots, and slide counter.
 ============================================================ */
 .carousel { position: relative; width: 100%; height: 190px; overflow: hidden; background: #000; }
-.carousel-track { display: flex; height: 100%; transition: transform 0.4s ease; }
+.carousel-track { display:flex; height:100%; transition:transform 0.4s ease; cursor:pointer; }
 .carousel-slide { min-width: 100%; height: 100%; flex-shrink: 0; }
 .carousel-btn {
   position: absolute; top: 50%; transform: translateY(-50%);
@@ -297,6 +297,24 @@ a.course-item:hover {
   @media (max-width: 480px) {
     nav ul { display: none; }
   }
+/* LIGHTBOX */
+#lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:9999; justify-content:center; align-items:center; }
+#lightbox.active { display:flex; }
+#lb-box { position:relative; display:flex; flex-direction:column; align-items:center; gap:14px; max-width:92vw; max-height:92vh; }
+#lb-close { position:absolute; top:-42px; right:0; background:rgba(255,255,255,0.15); color:white; border:none; width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.2s; }
+#lb-close:hover { background:rgba(255,255,255,0.3); }
+#lb-img-wrap { position:relative; display:flex; align-items:center; justify-content:center; }
+#lb-img { max-width:88vw; max-height:78vh; object-fit:contain; border-radius:8px; box-shadow:0 8px 40px rgba(0,0,0,0.5); display:block; }
+.lb-arrow { position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:white; border:none; width:40px; height:40px; border-radius:50%; font-size:1.6rem; cursor:pointer; z-index:10; display:flex; align-items:center; justify-content:center; transition:background 0.2s; }
+.lb-arrow:hover { background:rgba(0,0,0,0.85); }
+#lb-prev { left:8px; }
+#lb-next { right:8px; }
+#lb-footer { display:flex; flex-direction:column; align-items:center; gap:6px; }
+#lb-dots { display:flex; gap:8px; }
+.lb-dot { width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,0.4); cursor:pointer; border:none; transition:background 0.25s; display:inline-block; }
+.lb-dot.active { background:white; }
+#lb-count { color:rgba(255,255,255,0.6); font-size:0.8rem; font-family:'Segoe UI',sans-serif; }
+  
 </style>
 </head>
 <body>
@@ -490,7 +508,7 @@ a.course-item:hover {
 <div class="project-card">
   <div class="carousel" id="c1" data-current="0">
     <button class="carousel-btn carousel-btn-left" onclick="move('c1',-1)">&#8249;</button>
-    <div class="carousel-track">
+    <div class="carousel-track" onclick="openLightbox('c1')">
 
       <!-- SLIDE 1 — upload robot1.jpg to your repo and use it here -->
       <div class="carousel-slide">
@@ -535,7 +553,7 @@ a.course-item:hover {
 <div class="project-card">
   <div class="carousel" id="c2" data-current="0">
     <button class="carousel-btn carousel-btn-left" onclick="move('c2',-1)">&#8249;</button>
-    <div class="carousel-track">
+    <div class="carousel-track" onclick="openLightbox('c2')">
 
       <!-- SLIDE 1 — upload robot1.jpg to your repo and use it here -->
       <div class="carousel-slide">
@@ -579,7 +597,7 @@ a.course-item:hover {
 <div class="project-card">
   <div class="carousel" id="c3" data-current="0">
     <button class="carousel-btn carousel-btn-left" onclick="move('c3',-1)">&#8249;</button>
-    <div class="carousel-track">
+    <div class="carousel-track" onclick="openLightbox('c3')">
 
       <!-- SLIDE 1 — upload robot1.jpg to your repo and use it here -->
       <div class="carousel-slide">
@@ -743,11 +761,12 @@ a.course-item:hover {
      You do NOT need to change this code — ever.
 ============================================================ -->
 <script>
+  /* ---- CARD CAROUSEL ---- */
   function move(id, dir) {
-    const el     = document.getElementById(id);
-    const track  = el.querySelector('.carousel-track');
+    const el = document.getElementById(id);
+    const track = el.querySelector('.carousel-track');
     const slides = el.querySelectorAll('.carousel-slide');
-    const dots   = el.querySelectorAll('.dot');
+    const dots = el.querySelectorAll('.dot');
     const counter = document.getElementById(id + '-counter');
     let cur = parseInt(el.dataset.current || 0);
     cur = (cur + dir + slides.length) % slides.length;
@@ -757,16 +776,119 @@ a.course-item:hover {
     if (counter) counter.textContent = `${cur + 1} / ${slides.length}`;
   }
   function jump(id, index) {
-    const el     = document.getElementById(id);
-    const track  = el.querySelector('.carousel-track');
-    const dots   = el.querySelectorAll('.dot');
+    const el = document.getElementById(id);
+    const track = el.querySelector('.carousel-track');
+    const slides = el.querySelectorAll('.carousel-slide');
+    const dots = el.querySelectorAll('.dot');
     const counter = document.getElementById(id + '-counter');
     el.dataset.current = index;
     track.style.transform = `translateX(-${index * 100}%)`;
     dots.forEach((d, i) => d.classList.toggle('active', i === index));
     if (counter) counter.textContent = `${index + 1} / ${slides.length}`;
   }
+
+  /* ---- LIGHTBOX ---- */
+  let lbImages = [], lbCurrent = 0, lbCardId = '';
+
+  function openLightbox(id) {
+    lbCardId = id;
+    const carousel = document.getElementById(id);
+    lbCurrent = parseInt(carousel.dataset.current || 0);
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    lbImages = [];
+    slides.forEach(slide => {
+      const img = slide.querySelector('img');
+      if (img) lbImages.push({ src: img.src, alt: img.alt });
+    });
+    if (lbImages.length === 0) return;
+    renderLbDots();
+    updateLightbox();
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function closeLightboxOutside(e) {
+    if (e.target === document.getElementById('lightbox')) closeLightbox();
+  }
+
+  function lightboxMove(dir, e) {
+    e.stopPropagation();
+    lbCurrent = (lbCurrent + dir + lbImages.length) % lbImages.length;
+    updateLightbox();
+    syncCard();
+  }
+
+  function lightboxDotJump(index, e) {
+    e.stopPropagation();
+    lbCurrent = index;
+    updateLightbox();
+    syncCard();
+  }
+
+  function updateLightbox() {
+    document.getElementById('lb-img').src = lbImages[lbCurrent].src;
+    document.getElementById('lb-img').alt = lbImages[lbCurrent].alt;
+    document.getElementById('lb-count').textContent = `${lbCurrent + 1} / ${lbImages.length}`;
+    document.querySelectorAll('.lb-dot').forEach((d, i) => d.classList.toggle('active', i === lbCurrent));
+    const show = lbImages.length > 1;
+    document.getElementById('lb-prev').style.display = show ? 'flex' : 'none';
+    document.getElementById('lb-next').style.display = show ? 'flex' : 'none';
+    document.getElementById('lb-dots').style.display = show ? 'flex' : 'none';
+  }
+
+  function renderLbDots() {
+    const dotsEl = document.getElementById('lb-dots');
+    dotsEl.innerHTML = '';
+    lbImages.forEach((_, i) => {
+      const dot = document.createElement('span');
+      dot.className = 'lb-dot';
+      dot.onclick = (e) => lightboxDotJump(i, e);
+      dotsEl.appendChild(dot);
+    });
+  }
+
+  function syncCard() {
+    if (!lbCardId) return;
+    const el = document.getElementById(lbCardId);
+    const track = el.querySelector('.carousel-track');
+    const slides = el.querySelectorAll('.carousel-slide');
+    const dots = el.querySelectorAll('.dot');
+    const counter = document.getElementById(lbCardId + '-counter');
+    el.dataset.current = lbCurrent;
+    track.style.transform = `translateX(-${lbCurrent * 100}%)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === lbCurrent));
+    if (counter) counter.textContent = `${lbCurrent + 1} / ${slides.length}`;
+  }
+
+  /* Keyboard shortcuts: ESC closes, arrow keys navigate */
+  document.addEventListener('keydown', function(e) {
+    if (!document.getElementById('lightbox').classList.contains('active')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft')  { lbCurrent = (lbCurrent - 1 + lbImages.length) % lbImages.length; updateLightbox(); syncCard(); }
+    if (e.key === 'ArrowRight') { lbCurrent = (lbCurrent + 1) % lbImages.length; updateLightbox(); syncCard(); }
+  });
 </script>
 
+<!-- LIGHTBOX MODAL -->
+<div id="lightbox" onclick="closeLightboxOutside(event)">
+  <div id="lb-box">
+    <button id="lb-close" onclick="closeLightbox()">&#10005;</button>
+    <div id="lb-img-wrap">
+      <button class="lb-arrow" id="lb-prev" onclick="lightboxMove(-1, event)">&#8249;</button>
+      <img id="lb-img" src="" alt="">
+      <button class="lb-arrow" id="lb-next" onclick="lightboxMove(1, event)">&#8250;</button>
+    </div>
+    <div id="lb-footer">
+      <div id="lb-dots"></div>
+      <div id="lb-count"></div>
+    </div>
+  </div>
+</div>
+  
 </body>
 </html>
